@@ -6,12 +6,13 @@
 #include <cstdlib>
 #include <cmath>
 #include <queue>
+#include <deque>
 using namespace std;
 
 typedef long long ll;
 typedef pair<int, int> ii;
 typedef vector<int> vi;
-#define INF 1000000000000000LL
+#define INF 10000000000000000LL
 
 #define MAXN 200005
 int n, m, k;
@@ -20,24 +21,40 @@ struct Edge {
 };
 vector<Edge> G[MAXN];
 
-ll dis[MAXN];
+ll dis[MAXN], sum;
 bool in_q[MAXN];
-queue<int> Q;
+deque<int> Q;
 
 void shortest_path(int S)
 {
-	for (int i = 1; i <= n; ++i) dis[i] = INF;
-	dis[S] = 0;
-	Q.push(S);
+	//for (int i = 1; i <= n; ++i) dis[i] = INF;
+	memset(dis, 0x3f, sizeof dis);
+	sum = dis[S] = 0;
+	Q.push_back(S);
 	while (!Q.empty())
 	{
-		int u = Q.front(); Q.pop(); in_q[u] = false;
+		int u = Q.front(); Q.pop_front();
+		sum -= dis[u];
+		if (dis[u] * Q.size() > sum)
+		{
+			Q.push_back(u);
+			sum += dis[u];
+			continue;
+		}
+		in_q[u] = false;
 		for (int i = 0; i < G[u].size(); ++i)
 		{
 			int v = G[u][i].to, c = G[u][i].cost;
 			if (dis[v] > dis[u] + c) {
 				dis[v] = dis[u] + c;
-				if (!in_q[v]) Q.push(v), in_q[v] = true;
+				if (!in_q[v])
+				{
+					in_q[v] = true;
+					if (!Q.empty() && dis[v] < dis[Q.front()])
+						Q.push_front(v);
+					else Q.push_back(v);
+					sum += dis[v];
+				}
 			}
 		}
 	}
@@ -67,6 +84,6 @@ int main()
 		res = min(res, du1 + dv2 + w);
 		res = min(res, du2 + dv1 + w);
 		if (res >= INF) puts("+Inf");
-		else printf("%d\n", res);
+		else printf("%lld\n", res);
 	}
 }
