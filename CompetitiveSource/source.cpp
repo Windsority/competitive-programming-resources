@@ -5,8 +5,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <cmath>
+#include <functional>
 #include <queue>
-#include <deque>
 using namespace std;
 
 typedef long long ll;
@@ -21,40 +21,26 @@ struct Edge {
 };
 vector<Edge> G[MAXN];
 
-ll dis[MAXN], sum;
-bool in_q[MAXN];
-deque<int> Q;
+ll dis[MAXN];
 
+typedef pair<ll, int> P;
 void shortest_path(int S)
 {
-	//for (int i = 1; i <= n; ++i) dis[i] = INF;
+	priority_queue<P, vector<P>, greater<P> > Q;
 	memset(dis, 0x3f, sizeof dis);
-	sum = dis[S] = 0;
-	Q.push_back(S);
+	Q.push(make_pair(0, S));
+	dis[S] = 0;
 	while (!Q.empty())
 	{
-		int u = Q.front(); Q.pop_front();
-		sum -= dis[u];
-		if (dis[u] * Q.size() > sum)
-		{
-			Q.push_back(u);
-			sum += dis[u];
-			continue;
-		}
-		in_q[u] = false;
+		int u = Q.top().second;
+		Q.pop();
 		for (int i = 0; i < G[u].size(); ++i)
 		{
 			int v = G[u][i].to, c = G[u][i].cost;
-			if (dis[v] > dis[u] + c) {
+			if (dis[v] > dis[u] + c)
+			{
 				dis[v] = dis[u] + c;
-				if (!in_q[v])
-				{
-					in_q[v] = true;
-					if (!Q.empty() && dis[v] < dis[Q.front()])
-						Q.push_front(v);
-					else Q.push_back(v);
-					sum += dis[v];
-				}
+				Q.push(make_pair(dis[v], v));
 			}
 		}
 	}
