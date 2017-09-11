@@ -32,7 +32,7 @@ int main()
 		while (!Q.empty() && Q.front() <= i - n) Q.pop_front();
 		while (!Q.empty() && s[i] < s[Q.back()]) Q.pop_back();
 		Q.push_back(i);
-		if (i >= n && s[i - n] >= s[i]) ++res;
+		if (i >= n && s[i - n] <= s[i]) ++res;
 	}
 	printf("%d\n", res);
 }
