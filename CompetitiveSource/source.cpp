@@ -12,7 +12,7 @@ typedef pair<int, int> ii;
 typedef vector<int> vi;
 #define INF 1000000000
 
-#define MAXN 100005
+#define MAXN 1000005
 int n, s[MAXN * 2], res;
 
 int main()
@@ -32,7 +32,7 @@ int main()
 		while (!Q.empty() && Q.front() <= i - n) Q.pop_front();
 		while (!Q.empty() && s[i] < s[Q.back()]) Q.pop_back();
 		Q.push_back(i);
-		if (i >= n && s[i - n] <= s[i]) ++res;
+		if (i >= n && s[i - n] <= s[Q.front()]) ++res;
 	}
 	printf("%d\n", res);
 }
