@@ -8,7 +8,7 @@
 #include <vector>
 #include <queue>
 using namespace std;
-#define INF 1000000000
+#define INF 1000000005
 #define MAXN 10005
 typedef long long ll;
 int n, m, U, V, S, c[MAXN], dis[MAXN], temp[MAXN];
@@ -22,14 +22,14 @@ typedef pair<int, int> P;
 bool Check(int s)
 {
 	fill(dis + 1, dis + 1 + n, INF);
-	queue<int> Q;
-	Q.push(U);
+	deque<int> Q;
+	Q.push_back(U);
 	dis[U] = 0;
 	if (c[U] > s || c[V] > s) return false;
 	while (!Q.empty())
 	{
 		int u = Q.front(); 
-		Q.pop();
+		Q.pop_front();
 		in_q[u] = false;
 		for (int i = 0; i < G[u].size(); ++i)
 		{
@@ -38,11 +38,17 @@ bool Check(int s)
 			if (dis[v] > dis[u] + cost)
 			{
 				dis[v] = dis[u] + cost;
-				if (!in_q[v]) Q.push(v), in_q[v] = true;
+				if (!in_q[v])
+				{
+					in_q[v] = true;
+					if (!Q.empty() && dis[v] < dis[Q.front()])
+						Q.push_front(v);
+					else Q.push_back(v);
+				}
 			}
 		}
 	}
-	return dis[V] <= s;
+	return dis[V] <= S;
 }
 
 int main()
