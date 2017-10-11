@@ -36,7 +36,7 @@ int main()
 		{
 			f[i][ZERO] = (f[i - 1][ONE_FRONT] + f[i - 1][ZERO]) % MOD;
 			f[i][ONE_FRONT] = f[i - 1][MINED];
-			if (i != len) f[i][ONE_BACK] = (f[i][ZERO] + f[i][ONE_FRONT]) % MOD;
+			if (i != len) f[i][ONE_BACK] = (f[i - 1][ZERO] + f[i - 1][ONE_FRONT]) % MOD;
 			if (i != len) f[i][TWO] = f[i - 1][MINED];
 			f[i][MINED] = (f[i - 1][ONE_BACK] + f[i - 1][TWO] + f[i - 1][MINED]) % MOD;
 		}
